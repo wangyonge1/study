@@ -1,0 +1,109 @@
+ https://git-scm.com/book/zh/v2
+      
+ 1.window安装git：
+	下载msysgit：https://git-for-windows.github.io，默认安装即可
+	安装完设置（使用git bash）：
+	$ git config --global user.name "Your Name"
+	$ git config --global user.email "email@example.com"
+    git config color.ui true
+    git config --list#查看设置
+
+2.常用命令：
+    git init #将当前目录变成git可以管理的仓库
+    提交
+    git add filename#将文件添加到仓库（stage暂存区），文件名支持通配符，子目录
+    git commit -m "提交备注"#将stage区提交至版本库
+    查询信息
+    git log --pretty=oneline#查看提交历史
+    git reflog #查看命令历史
+    git status #查看git状态
+    git diff [--stat]  HEAD -- filename #查看工作区和版本库里最新版的区别，可以是其他版本（HEAD~1，commit id指定）
+    git diff [--stat] [filename]#查看暂存区和工作区文件区别，不带filename参数在查看所有暂存区文件和工作区的区别
+    git diff [--stat]  --cached [filename]#查看暂存区和版本库文件区别，filename参数同上
+    git log --graph --pretty=oneline --abbrev-commit#查看分支合并情况
+
+    撤销
+    git reset --hard HEAD^ #回退到上一个版本，--hard参数使得head版本彻底没有，请慎用
+                            --soft HEAD版本存在且处于未commit状态（在stage区）
+                            --mixed HEAD版本存在且处于未add状态（在工作区）
+    git reset --hard 222222#回退到commit id前6位为222222的版本
+    git reset  HEAD filename #将指定文件从HEAD恢复到暂存区
+    git checkout -- filename #撤销修改，如果stage区有该文件（stage不变），恢复到stage区的版本；
+                                        stage区无该文件，恢复到版本库的版本
+    git checkout HEAD filename#将版本库恢复到工作区
+    
+    删除
+    git rm filename#执行rm（自动删除工作区文件），然后在commit操作
+    git rm --cached filename#将暂存区文件删除
+    git mv filename1 filename2#重命名，然后在commit
+    
+    远程
+    ssh-keygen -t rsa -C "youremail@sina.com"#创建ssh key 用于设置github账号
+    git remote add origin git@github.com:github账号/learngit.git
+    #1.在GitHub创建learngit.git仓库，将本地仓库与github仓库关联；2.origin远程库的名字，git的默认叫法
+    git push -u origin master# 本地库的内容推送到远程，-u参数（只在第一次推送使用），不但将本地的master分支内容推送到远程master分支
+                              还会把本地的master分支与远程master分支关联                                
+    git clone git@github.com:github账号/learngit.git#把远程库克隆到本地
+    git branch --set-upstream dev origin/dev #本地dev分支与远程dev分支建立关系
+    git pull #从远程获得代码
+    git remote -v #查看远程信息
+
+    
+    分支
+    git checkout -b 分支名#创建分支，并切换到该分支
+    git branch 分支名#创建分支
+    git checkout 分支名#切换到分支
+    git branch #查看当前分支
+    git branch -d 分支名#删除分支
+    git branch -D 分支名#强行删除分支，即使没有被合并过的分支
+    git merge 分支名# 合并分支到当前分支，Fast forward模式，分支删除后，会丢掉分支信息
+    git merge --no-ff -m "merge with no-ff" dev#不使用Fast forward模式，Git就会在merge时生成一个新的commit，
+                                                这样，从分支历史上就可以看出分支信息。git会自动选择合并模式，
+                                                不需指定--no-ff
+
+    git stash#将当前工作现场保存
+    git stash apply id#根据id恢复现场
+    git stash drop id#删除stash内容
+    git stash pop# 恢复现场并删除stash内容
+    git stash list #查看stash
+    
+    标签
+    git tag tagname#创建tag
+    git tag#查看所有tag
+    git tag tagname （commit id）#为commit id创建tag
+    git tag -a v0.1 -m "version 0.1 released" 3628164#-a tagname -m 说明文字
+    git show tagname
+    git push origin <tagname>可以推送一个本地标签； 
+    git push origin --tags可以推送全部未推送过的本地标签； 
+    git tag -d <tagname>可以删除一个本地标签； 
+    git push origin :refs/tags/<tagname>可以删除一个远程标签
+    
+    获取帮助
+    git help 命令：git help add
+
+
+
+3.注意事项：
+    所有代码，文档均utf-8格式（不带bom）
+    git分为：本地工作区（存在代码的目录），本地stage暂存区（在.git中），本地版本库（.git 目录），远程
+    添加文件到git仓库分2步：git add（没有add的文件不会被提交）；git commit
+    git中HEAD表示分支的当前版本，HEAD^(HEAD~1)表示上一个版本，依次类推
+    git支持https和ssh协议：https://github.com/github账号/learngit.git
+    多个分支共用stage区，切换分支前必须commit或stash，否则无法切换分支
+    一般master比较稳定，只用户发布新版本，开发在dev分支，每个人有自己的分支，合并到dev
+    .gitignore 在工作区目录
+     提交过程                              撤销过程                                  区域文件比较
+    工作区-->stage（git add filename） stage-->工作区（git checkout --filename） 比较文件（git diff filename）
+    stage-->版本库（git commit）       版本库-->stage（git reset HEAD filename） 比较文件（git diff --cached filename）
+    工作区-->版本库（git commit -a）   版本库-->工作区（git checkou HEAD filename）比较文件（git diff HEAD filename）
+    
+    
+   
+
+    
+    
+    
+
+
+
+    
