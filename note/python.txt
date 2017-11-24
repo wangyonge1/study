@@ -1,0 +1,41 @@
+1.闭合操作符，不使用反斜杠跨行，如：小括号，中括号，或括号，三引号，（单引号和双引号需反斜杠跨行）
+2.isinstance是布尔函数，可以接收多个类型，如：
+isinstance(num,(int,long,str))
+3.repr(obj)和`obj`,str(obj)是对象的字符串表示，前2个多数情况下可以用eval()重新获得对象：obj==eval(repr(obj)),str(obj)不可以
+4.对于可变对象：赋值操作只是改变对象的引用，不改变对象地址，浅拷贝只改变第一层地址，深拷贝所有地址都改变。不可变对象拷贝无意义
+5.dict的方法，keys(),items(),values()返回值都是列表，数据量大事导致很难处理，这时用对应的iter*()函数代替,返回惰性赋值的迭代器，用法同，iteritems(),iterkeys(),itervalues()
+6.r读方式打开文件，如果不存在抛出IOError，默认值；w写方式打开文件，如文件不存在则创建，如存在清空文件内容；  a追加方式打开文件，如不存在则创建，如存在在文件末尾追加内容；+表示可读可写；b表示二进制（如：'wb'）
+7.文件的read()和readlines()不会自动删除行结束符，常用代码：
+  f=open('myfile','r')
+  data=[line.strip() for line in f] #同样适用大文件
+  f.close()
+8。常用的异常类：
+   Exception 所有异常基类     StopIterarion 迭代器没有更多的值
+   NameError 未声明的变量     GeneratorExit 生成器发送异常来通知退出
+   ZeroDivisionError 除0异常  EOFError 没有內建输入，到达EOF标记
+   SyntaxError 语法异常       ImportError导入失败
+   KeyError 字典中不存在的关键字
+   IOError IO错误
+   AttributeError 属性异常
+   TypeError 类型异常
+   IndexError 索引异常
+   SystemExit 程序退出异常
+   KeyboardInterrupt 用户按下ctrl+c异常
+   AssertionError 断言异常
+
+   异常等级：--BaseException
+   				|-KeyboardInterrupt
+   				|-SystemExit
+   				|-Exception
+   					|-（all other current built-in exception）
+9.else语句：在for while等循环语句中，没有break或异常退出，则执行
+            在try-except中，没有检查到异常才执行
+10.闭包：在内嵌函数中，对外部作用域变量（但不是全局作用域）进行引用，那么内部函数被认为是闭包。
+		 定义在外部函数内但由内部函数引用或使用的变量被称为自由变量
+		 函数调用不是闭包
+		 闭包的特点：
+		 闭包函数必须有内嵌函数
+		 内嵌函数需要引用该嵌套函数上一级namespace中的变量
+		 闭包函数必须返回内嵌函数
+11.生成器：一个带yield语句的函数，用于返回中间值	
+12.super()函数：super(Teacher,self).__init__(name,gender) Teacher为一个子类，name和gender为父类init函数的参数	
