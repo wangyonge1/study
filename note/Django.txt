@@ -1,0 +1,46 @@
+1. 安装：pip install Django==1.11.7 经常安装失败，可更改pip源：
+		pip install -i https://pypi.douban.com/simple django
+2. 创建项目：Django-admin startproject 项目名 。
+3. 管理项目： 
+             启动服务 manage.py runserver [host:port] host与端口均可选
+             创建应用 manage.py startapp app名称(保证app目录为项目目录的子目录)
+4.编写代码步骤：
+  1）编写app下models.py(数据库相关：一个class表示一个数据库表，class字段表示表字段)
+    class  Article(models.Model):#继承models.Model类
+    	title = models.CharField(max_length=32,default='title')
+    	content = models.TextField(null=True)
+
+    	def __unicode__(self):
+        	return self.title
+  2）编写views.py（函数与template的关系），需导入models.py模块
+     from django.http import HttpResponse
+	 import models
+
+	 def article_page(request,article_id):
+     	article=models.Article.objects.get(pk=article_id)
+     	return render(request,'blog/article_page.html',{'article':article})#第二个参数模板地址，第三个参数向模板通过key：value方式传递数据
+  3) 编写template文件，目录结构 Templates-->app名称-->html模板文件
+     <a href="{% url 'blog:article_page' article.id %}">{{article.content}}</a>#模板通过key取值
+     配置url格式:{% url 'app_name:url_name' param %} 
+  4) 配置urls（将url与views.py下函数建立对应关系）：首先配置项目根目录下urls.py；然后配置app下urls.py
+  	 根目录：
+     from django.conf.urls import url,include
+     url(r'^news/',include('blog.urls',namespace='blog')),
+     app下：
+     import views
+
+		urlpatterns = [
+
+    		url(r'^article/(?P<article_id>[0-9]+)/$',views.article_page,name='article_page'),
+        #正则表达式意思：给分组起了别名article_id(应与views.article_page函数的参数名一致)，匹配到的【0-9】数字会传给article_id
+        #article_page是views.py中的一个函数
+		]
+  5）将app添加到admin模块进行管理，修改app目录下的admin.py文件
+     import models
+	 admin.site.register(models.Article)
+  6）每次修改models.py后，都需进行迁移才能生效
+     manage.py makemigrations [app名]
+     manage.py migrate
+
+   
+    
